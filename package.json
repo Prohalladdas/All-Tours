@@ -1,0 +1,14 @@
+{
+  "name": "natours",
+  "version": "1.0.0",
+  "description": "Using nodejs, express.js & MongoDB ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Prohallad",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
