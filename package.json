@@ -4,7 +4,7 @@
   "description": "Using nodejs, express.js & MongoDB ",
   "main": "app.js",
   "scripts": {
-    "start:dev": "nodemon server.js",
+    "start": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&& nodemon server.js"
   },
   "author": "Prohallad",
@@ -12,10 +12,12 @@
   "dependencies": {
     "dotenv": "^17.2.1",
     "express": "^4.21.2",
+    "mongodb": "^6.18.0",
+    "mongoose": "^5.13.23",
     "morgan": "^1.10.1"
   },
   "devDependencies": {
-    "eslint": "^5.16.0",
+    "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
