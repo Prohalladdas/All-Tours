@@ -17,6 +17,11 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
   photo: String,
+  role: {
+    type: String,
+    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    default: 'user',
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],
@@ -48,7 +53,7 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined;
 
   // Set passwordChangedAt to 1 second in the past to avoid JWT race conditions
-  this.passwordChangedAt = Date.now() - 1000;
+  // this.passwordChangedAt = Date.now() - 1000;
 
   next();
 });
