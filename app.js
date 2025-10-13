@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
@@ -22,15 +23,20 @@ app.set('views', path.join(__dirname, 'views'));
 //1) GLOBAL MIDDLEWARES
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
 // Set security HTTP headers
-// app.use(helmet());
+app.use(helmet());
 // Set security HTTP headers
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-      'script-src': ["'self'", 'https://cdn.maptiler.com'],
+      'script-src': [
+        "'self'",
+        'https://cdn.maptiler.com',
+        'https://cdnjs.cloudflare.com',
+      ],
       'style-src': [
         "'self'",
         'https://cdn.maptiler.com',
@@ -50,6 +56,8 @@ app.use(
         "'self'",
         'https://api.maptiler.com',
         'https://cdn.maptiler.com',
+        'https://cdnjs.cloudflare.com',
+        'http://127.0.0.1:3000',
       ],
     },
   }),
@@ -94,7 +102,7 @@ app.use(
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
+  console.log(req.cookies);
 
   next();
 });
