@@ -114,7 +114,17 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 
+// app.all('*', (req, res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+// });
+
 app.all('*', (req, res, next) => {
+  if (
+    req.originalUrl.endsWith('.map') ||
+    req.originalUrl.startsWith('/.well-known')
+  ) {
+    return next();
+  }
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
