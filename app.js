@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const AppError = require('./utils/appError');
 const tourRouter = require('./routes/tourRoutes');
@@ -27,42 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
 app.use(helmet());
-// Set security HTTP headers
-// app.use(
-//   helmet.contentSecurityPolicy({
-//     directives: {
-//       ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-//       'script-src': [
-//         "'self'",
-//         'https://cdn.maptiler.com',
-//         'https://cdnjs.cloudflare.com',
-//       ],
-//       'style-src': [
-//         "'self'",
-//         'https://cdn.maptiler.com',
-//         'https://fonts.googleapis.com',
-//         "'unsafe-inline'",
-//       ],
-//       'worker-src': ["'self'", 'blob:'],
-//       'child-src': ["'self'", 'blob:'],
-//       'img-src': [
-//         "'self'",
-//         'data:',
-//         'https://cdn.maptiler.com',
-//         'https://api.maptiler.com',
-//       ],
-//       'font-src': ["'self'", 'https://fonts.gstatic.com'],
-//       'connect-src': [
-//         "'self'",
-//         'https://api.maptiler.com',
-//         'https://cdn.maptiler.com',
-//         'https://cdnjs.cloudflare.com',
-//         'http://127.0.0.1:3000',
-//       ],
-//     },
-//   }),
-// );
-
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -138,6 +103,8 @@ app.use(
   }),
 );
 
+app.use(compression());
+
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
@@ -147,16 +114,11 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-
 app.use('/', viewRouter);
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
-
-// app.all('*', (req, res, next) => {
-//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-// });
 
 app.all('*', (req, res, next) => {
   if (
