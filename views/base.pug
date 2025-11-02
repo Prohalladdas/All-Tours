@@ -9,12 +9,9 @@ html
       link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
       title Natours | #{title}
 
-  body(data-alert=alert ? alert : '')
+  // This body tag will now be empty unless there is a real alert
+  body(data-alert=alert ? alert : '') 
     include _header
-
-    //- ALERTS
-    if alert
-      .alert.alert--success= alert
 
     //- CONTENT
     block content
