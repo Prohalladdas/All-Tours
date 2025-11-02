@@ -26,15 +26,9 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) GLOBAL MIDDLEWARES
-// Implement CORS
 app.use(cors());
 app.options('*', cors());
-// app.options('/api/v1/tours/:id', cors())
-
-// Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Set security HTTP headers
 app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
@@ -74,16 +68,15 @@ app.use(
   }),
 );
 
-// Development loggin
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-// Limit request from same API
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
   message: 'To many requests from this IP, please try again in an hour!',
+  trustProxy: true,
 });
 app.use('/api', limiter);
 
@@ -93,17 +86,11 @@ app.post(
   bookingController.webhookChekout,
 );
 
-// Body parser, reading data from the body into req.body
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
-// Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
-
-// Data sanitization against XSS
 app.use(xss());
-
-// Prevent parameter pollution
 app.use(
   hpp({
     whitelist: [
@@ -119,11 +106,8 @@ app.use(
 
 app.use(compression());
 
-// Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  // console.log(req.cookies);
-
   next();
 });
 
